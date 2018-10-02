@@ -12,6 +12,12 @@ end
 group :development, :test do
 	gem 'sqlite3'
 end
+
+#Asset pipeline
+group :production do
+  gem 'rails_12factor'
+end
+
 # Use Puma as the app server
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
