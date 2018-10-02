@@ -1,5 +1,8 @@
 {
   "name": "cryptodriver",
   "private": true,
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "postinstall": "ng build"
+  }
 }
