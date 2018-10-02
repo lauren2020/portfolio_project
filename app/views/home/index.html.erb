@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--<h1>Home#index</h1>
+    <p>Find me in app/views/home/index.html.erb</p>
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script> -->
+    <!--#  Load our React component.
+    # <script src="like_button.js"></script>-->
+    <!--<div id="root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script type="text/babel">
+        class Greeting extends React.Component {
+        render() {
+        return (
+        <p>Hello world tester</p>);
+        }
+        }
+        ReactDOM.render(
+        <Greeting />,
+        document.getElementById('root')
+        );
+    </script>-->
+
+    <div id="main" class="main-content">
+        <div id="header" class="header-content">
+            <h1>Cryptosolver</h1>
+        </div>
+
+        <div id="leftSidePane" class="left-side-pane">
+            <p>Cipher Details:</p>
+            a:<br>
+            <input id="aTextField" class="a-field" type="text" name="firstname" width="100" height="100"><br>
+            <p></p>
+            b:<br>
+            <input id="bTextField" class="b-field" type="text" name="firstname" width="100" height="100"><br>
+            <p></p>
+            Keyword:<br>
+            <input id="keywordTextField" class="keyword-field" type="text" name="firstname" width="100" height="100"><br>
+            <!-- <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn">Select Cipher</button>
+                <div id="cipherTypeDropdown" class="cipher-dropdown-content">
+                    <a href="#" id="affineCipher" value="affineCipher">Affine Cipher</a>
+                    <a href="#" id="shiftCipher" value="shiftCipher">Shift Cipher</a>
+                    <a href="#" id="allCipher" value="allCipher">Permeate</a>
+                </div>
+            </div> -->
+            <p></p>
+            Ciphered Text:<br>
+            <!-- <input id="cipherTextField" class="cipher-field" type="text" name="firstname" width="100" height="100"><br> -->
+            <textarea id="cipherTextField" class="cipher-field" name="firstname"></textarea>
+            <input type="submit" value="Decipher" onclick="decipher()">
+            <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
+            <input type="submit" value="Affine Decipher" onclick="affineDecipher1()">
+            <input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
+            <input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
+            <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">
+            <input type="submit" value="Print Cosets" onclick="printCosetsOfLength()">
+            <input type="submit" value="Print Frequencys of Cosets" onclick="frequencyCountCosetsOfLength()">
+            <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
+            <input type="submit" value="Get Alphabet Type" onclick="getAlphabetType()">
+            <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
+            <p></p>
+            Plain Text:<br>
+            <textarea id="plainTextField" class="cipher-field" name="firstname"></textarea>
+            <input type="submit" value="Affine Cipher" onclick="affineCipher()">
+            <input type="submit" value="Shift Cipher" onclick="shiftCipher()">
+            <input type="submit" value="Vigenere Cipher" onclick="vigenereCipher()">
+            <p></p>
+            <p id="permutationsTitle">Permutation Output:</p>
+            <p id="permutationsHolder"> - </p>
+        </div>
+
+        <div id="sidePane" class="right-side-pane">
+            <p id="frequencyTitle">Frequency Analyis:</p>
+            <p id="frequencyHolder" class="holder" value="$frequencyHolderMessage"> - </p>
+            <p id="frequencyAssociationTitle">Frequency Association:</p>
+            <textarea id="frequencyAssociationHolder" class="cipher-field" name="firstname"></textarea>
+            <p id="alphabetTypeTitle">Alphabet Type:</p>
+            <p id="alphabetTypeHolder" class="holder"> - </p>
+            <p id="indexOfCoincidenceTitle">Index of Coincidence:</p>
+            <p id="indexOfCoincidenceHolder" class="holder"> - </p>
+            <p id="keywordLengthTitle">Keyword Length:</p>
+            <p id="keywordLengthHolder" class="holder"> - </p>
+            <p id="keywordGuessTitle">Keyword Guess:</p>
+            <p id="keywordGuessHolder" class="holder"> - </p>
+        </div>
+    </div>
+
+    <!-- <div class="footer-content"></div> -->
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <div id="app"></div>
+    <script src="js/client.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</body>
+</html>
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>-->
+    <!--<!--<!--<h1>Home#index</h1>
+    <p>Find me in app/views/home/index.html.erb</p>
+
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>-->
+    <!--#  Load our React component.
+    # <script src="like_button.js"></script>-->
+    <!--<div id="root"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+    <script type="text/babel">
+        class Greeting extends React.Component {
+        render() {
+        return (
+        <p>Hello world tester</p>);
+        }
+        }
+        ReactDOM.render(
+        <Greeting />,
+        document.getElementById('root')
+        );
+    </script>-->
+    <!--<div id="app"></div>
+    <script src="js/client.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+    <!--<script type="text/javascript">
+        var ciphers = [
+            "Affine Ciper",
+            "Shift Cipher",
+            "Permutate"
+        ]
+
+        var standardAlphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+        var standardFrequencys = [0.0663,0.0116,0.0263,0.0316,0.1284,0.0211,0.0232,0.0368,0.0684,0.0011,0.0095,0.0326,0.0337,0.0747,0.0895,0.0137,0.0021,0.0547,0.0842,0.0979,0.0421,0.0063,0.0189,0.0032,0.0200,0.0021]
+        var standardFrequencysSorted = [0.1284,0.0979,0.0895,0.0842,0.0747,0.0684,0.0663,0.0547,0.0421,0.0368,0.0337,0.0326,0.0316,0.0263,0.0232,0.0211,0.0200,0.0189,0.0137,0.0116,0.0095,0.0063,0.0032,0.0021,0.0021,0.0011]
+        var standardAlphabetSorted = ["E","T","O","S","N","I","A","R","U","H","M","L","D","C","G","F","Y","W","P","B","K","V","X","Z","Q","J"]
+
+        function decipher() {
+        }
+
+        function getFrequencyCount() {
+            console.log("Enters Function")
+            var cipherText = document.getElementById("cipherTextField").value
+            var counts = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            var messageLength = cipherText.length
+            var displayMessage = ""
+            var frequencys = []
+            var matchGuess = ["-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-","-"]
+
+            console.log(cipherText)
+            var i = 0;
+            var j = 0;
+            for(i = 0; i < messageLength; i++) {
+                for(j = 0; j < standardAlphabet.length; j++) {
+                    if (cipherText[i].toUpperCase() == standardAlphabet[j]) {
+                        counts[j] = counts[j] + 1
+                        break
+                    }
+                }
+            }
+
+            frequencys = [counts[0] / messageLength]
+            for(j = 0; j < standardAlphabet.length; j++) {
+                frequencys.push(counts[j] / messageLength)
+            }
+
+
+
+            for(j = 0; j < standardAlphabet.length; j++) {
+                displayMessage += standardAlphabet[j] + ": " + frequencys[j].toString() + " | " + matchGuess[j] + "\n"
+            }
+
+            console.log(displayMessage);
+            var frequencyHolder = document.getElementById("frequencyHolder");
+            frequencyHolder.value = displayMessage;
+        }
+
+        function getKeywordLength() {
+        }
+
+        function getAlphabetType() {
+        }
+
+        function affineCipher() {
+        }
+
+        function shiftCipher() {
+        }
+
+        function permeate() {
+        }
+
+        function analyzeAlphabetType() {
+        }
+
+        function analyzeKeywordLength() {
+        }
+
+        function frequencyAnalysis() {
+            getFrequencyCount()
+        }
+
+        function myFunction() {
+            document.getElementById("cipherTypeDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+
+            var dropdowns = document.getElementsByClassName("cipher-dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+            }
+        }
+        }
+    </script>-->
+    <!--<div id="main">
+        <p>Cryptosolver</p>
+        <p>Cipher Type:</p>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+            <div id="cipherTypeDropdown" class="cipher-dropdown-content">
+                <a href="#">Affine Cipher</a>
+                <a href="#">Shift Cipher</a>
+                <a href="#">Permeate</a>
+            </div>
+        </div>
+        <p></p>
+        Ciphered Text:<br>
+        <input id="cipherTextField" type="text" name="firstname" width="100" height="100"><br>
+        <input type="submit" value="Decipher" onclick="decipher()">
+        <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
+        <input type="submit" value="Get Alphabet Type" onclick="">
+        <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
+        <p></p>
+        Plain Text:<br>
+        <input id="plainTextField" type="text" name="firstname" width="100" height="100"><br>
+        <p id="permutationsTitle">Permutation Output:</p>
+        <p id="permutationsHolder"> - </p>
+
+        <div id="side-pane">
+            <p id="frequencyTitle">Frequency Analyis:</p>
+            <p id="frequencyHolder"> - </p>
+            <p id="alphabetTypeTitle">Alphabet Type:</p>
+            <p id="alphabetTypeHolder"> - </p>
+            <p id="keywordLengthTitle">Keyword Length:</p>
+            <p id="keywordLengthHolder"> - </p>
+        </div>
+</body>
+</html>-->
