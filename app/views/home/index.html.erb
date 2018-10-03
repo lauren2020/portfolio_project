@@ -43,6 +43,7 @@
         </div>
 
         <div id="leftSidePane" class="left-side-pane">
+            <div class="left-entries-column">
             <p>Cipher Details:</p>
             a:<br>
             <input id="aTextField" class="a-field" type="text" name="firstname" width="100" height="100"><br>
@@ -52,6 +53,42 @@
             <p></p>
             Keyword:<br>
             <input id="keywordTextField" class="keyword-field" type="text" name="firstname" width="100" height="100"><br>
+            </div>
+            <div class="right-entries-column">
+                <p></p>
+                MatrixA:<br>
+                <div class="matrix-a-fields">
+                    <div class="matrix-left-column">
+                        <input id="matrixa00TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                        <input id="matrixa01TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                    </div>
+
+                    <div class="matrix-right-column">
+                        <input id="matrixa10TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                        <input id="matrixa11TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                    </div>
+                </div><br>
+                <p></p>
+                MatrixB:<br>
+                <div class="matrix-b-fields">
+                    <div class="matrix-left-column">
+                        <input id="matrixb00TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                        <input id="matrixb01TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                    </div>
+
+                    <div class="matrix-right-column">
+                        <input id="matrixb10TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                        <input id="matrixb11TextField" class="matrix-field" type="text" name="firstname" width="100" height="100" />
+                    </div>
+                </div><br>
+                <p></p>
+                Modulus:<br>
+                <input id="modulusTextField" class="modulus-field" type="text" name="firstname" width="100" height="100"><br>
+                <p></p>
+                K:<br>
+                <input id="kTextField" class="k-field" type="text" name="firstname" width="100" height="100"><br>
+
+            </div>
             <!-- <div class="dropdown">
                 <button onclick="myFunction()" class="dropbtn">Select Cipher</button>
                 <div id="cipherTypeDropdown" class="cipher-dropdown-content">
@@ -75,6 +112,10 @@
             <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
             <input type="submit" value="Get Alphabet Type" onclick="getAlphabetType()">
             <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
+            <input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
+            <input type="submit" value="Get matrix*k + modulus" onclick="calculateMatrixKAModulusFromFieldInput() ">
+            <input type="submit" value="Get Determinant" onclick="calculateDeterminateFromFieldInput()">
+            <input type="submit" value="Hill Encipher" onclick="hillCipherWithMatrixA()">
             <p></p>
             Plain Text:<br>
             <textarea id="plainTextField" class="cipher-field" name="firstname"></textarea>
