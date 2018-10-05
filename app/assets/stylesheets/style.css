@@ -92,6 +92,27 @@
     float: left;
 }
 
+.matrix-left-column {
+    width: 50%;
+    float: left;
+}
+
+.matrix-right-column {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+.left-entries-column {
+    width: 50%;
+    float: left;
+}
+.right-entries-column {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
 /* .footer-content {
     background-color: cadetblue;
     width: 100%;

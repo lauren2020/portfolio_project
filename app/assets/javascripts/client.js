@@ -819,6 +819,305 @@ function generateAllNLetterCombinations(n) {
     }
 }
 
+//HILL CIPHER FUNCTIONS//
+
+function calculateMatrixProductFromFieldInput() {
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var matrixB = [[0,0],[0,0]]
+    matrixB[0][0] = parseInt(document.getElementById("matrixb00TextField").value)
+    matrixB[1][0] = parseInt(document.getElementById("matrixb10TextField").value)
+    matrixB[0][1] = parseInt(document.getElementById("matrixb01TextField").value)
+    matrixB[1][1] = parseInt(document.getElementById("matrixb11TextField").value)
+
+    var modulus = parseInt(document.getElementById("modulusTextField").value)
+
+    var product = calculateMatrixProduct(matrixA, matrixB)
+    var result = matrixModulusM(product, modulus)
+
+    console.log("Result: " + result)
+}
+
+function calculateMatrixKAModulusFromFieldInput() {
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var modulus = parseInt(document.getElementById("modulusTextField").value)
+
+    var k = parseInt(document.getElementById("kTextField").value)
+
+    var ka = calculateKA(k, matrixA)
+    var result = matrixModulusM(ka, modulus)
+
+    console.log("Result: " + result)
+}
+
+function calculateDeterminateFromFieldInput() {
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var modulus = parseInt(document.getElementById("modulusTextField").value)
+
+    var detA = calculateDeterminant(matrixA)
+    var result = detA % modulus
+
+    console.log("Result: " + result)
+}
+
+function hillCipherWithMatrixA() {
+    console.log("Enciphering...")
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var cipherText = document.getElementById("plainTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var textIndex = 0
+    var matrixIndex = 0
+    var matrices = []
+    var currentMatrix = [-1,-1]
+
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        var value = convertLetterToValue(cipherArray[textIndex])
+        if(matrixIndex < 2 && textIndex != cipherArray.length - 1) {
+            currentMatrix[matrixIndex] = value
+            matrixIndex++
+        } else {
+            if(textIndex == cipherArray.length - 1) {
+                currentMatrix[matrixIndex] = value
+            }
+            currentMatrix = calculateMatrixProduct4x2(matrixA, [currentMatrix])
+            currentMatrix = matrixModulusM2x2(currentMatrix, 26)
+            matrices.push(currentMatrix[0])
+            matrices.push(currentMatrix[1])
+            currentMatrix[-1,-1]
+            currentMatrix[0] = value
+            matrixIndex = 1
+        }
+    }
+    var plainText = ""
+    var matricesIndex = 0
+    for(matricesIndex = 0; matricesIndex < matrices.length; matricesIndex++) {
+        plainText += convertValueToLetter(matrices[matricesIndex])
+    }
+
+    console.log(plainText)
+    document.getElementById("cipherTextField").innerHTML = plainText
+}
+
+function hillDecipherWithMatrixA() {
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var matrixInv = getInverseOf(matrixA, 26)
+
+    var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var textIndex = 0
+    var matrixIndex = 0
+    var matrices = []
+    var currentMatrix = [-1,-1]
+
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        var value = convertLetterToValue(cipherArray[textIndex])
+        if(matrixIndex < 2 && textIndex != cipherArray.length - 1) {
+            currentMatrix[matrixIndex] = value
+            matrixIndex++
+        } else {
+            if(textIndex == cipherArray.length - 1) {
+                currentMatrix[matrixIndex] = value
+
+            }
+            currentMatrix = calculateMatrixProduct4x2(matrixInv, [currentMatrix])
+            currentMatrix = matrixModulusM2x2(currentMatrix, 26)
+            matrices.push(currentMatrix[0])
+            matrices.push(currentMatrix[1])
+            currentMatrix[-1,-1]
+            currentMatrix[0] = value
+            matrixIndex = 1
+        }
+    }
+    var plainText = ""
+    var matricesIndex = 0
+    for(matricesIndex = 0; matricesIndex < matrices.length; matricesIndex++) {
+        plainText += convertValueToLetter(matrices[matricesIndex])
+    }
+
+    console.log(plainText)
+    document.getElementById("plainTextField").innerHTML = plainText
+}
+
+function getAdjuntMatrix(matrix) {
+    var adjunctMatrix = [[0,0],[0,0]]
+
+    adjunctMatrix[0][0] = matrix[1][1]
+    adjunctMatrix[0][1] = -matrix[0][1] + 26
+    adjunctMatrix[1][0] = -matrix[1][0] + 26
+    adjunctMatrix[1][1] = matrix[0][0]
+
+    return adjunctMatrix
+}
+
+function findInverseFromGivenValues() {
+    var matrixA = [[0,0],[0,0]]
+    matrixA[0][0] = parseInt(document.getElementById("matrixa00TextField").value)
+    matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var modulus = parseInt(document.getElementById("modulusTextField").value)
+
+    var inverse = getInverseOf(matrixA, modulus)
+    console.log("Inverse: " + inverse)
+}
+
+function getValueInverse(a) {
+    var inverseIndex = 0
+    var flag = 0
+    var a_inv = 0
+    for (inverseIndex = 0; inverseIndex < 26; inverseIndex++) { 
+        flag = (a * inverseIndex) % 26; 
+          
+        //Check if (a*i)%26 == 1 ,then i will be the multiplicative inverse of a 
+        if (flag == 1) {  
+            a_inv = inverseIndex; 
+        } 
+    } 
+
+    return a_inv
+}
+
+function getInverseOf(matrix, m) {
+    var detA = calculateDeterminant(matrix)
+    var detA_Inv = getValueInverse(detA)
+    var aInverse = [[-1,-1],[-1,-1]]
+    if (isRelativelyPrime(detA, m)) {
+        var adjunctMatrix = getAdjuntMatrix(matrix)
+        var partialInverse = calculateKA(detA_Inv, adjunctMatrix)
+        var aInverse = matrixModulusM(partialInverse, m)
+    } else {
+        console.log("Not Invertable")
+    }
+    return aInverse
+}
+
+function isRelativelyPrime(a, b) {
+    return gcd(a, b) == 1
+}
+
+function gcd(a, b) {
+    var t;
+    while(b != 0){
+        t = a;
+        a = b;
+        b = t%b;
+    }
+    return a;
+}
+
+function calculateMatrixProduct(matrixA, matrixB) {
+    var product = [[0,0],[0,0]]
+    product[0][0] = matrixA[0][0]*matrixB[0][0] + matrixA[1][0]*matrixB[0][1]
+    product[1][0] = matrixA[0][0]*matrixB[1][0] + matrixA[1][0]*matrixB[1][1]
+    product[0][1] = matrixA[0][1]*matrixB[0][0] + matrixA[1][1]*matrixB[0][1]
+    product[1][1] = matrixA[0][1]*matrixB[1][0] + matrixA[1][1]*matrixB[1][1]
+
+    return product
+}
+
+function calculateMatrixProduct4x2(matrixA, matrixB) {
+    var product = [[0,0]]
+    product[0][0] = matrixA[0][0]*matrixB[0][0] + matrixA[1][0]*matrixB[0][1]
+    product[0][1] = matrixA[0][1]*matrixB[0][0] + matrixA[1][1]*matrixB[0][1] 
+
+    return product
+}
+
+function matrixModulusM(matrix, m) {
+    var result = [[0,0],[0,0]]
+    result[0][0] = matrix[0][0] % m
+    result[1][0] = matrix[1][0] % m
+    result[0][1] = matrix[0][1] % m
+    result[1][1] = matrix[1][1] % m
+
+    return result
+}
+function matrixModulusM2x2(matrix, m) {
+    var result = [0,0]
+    result[0] = matrix[0][0] % m
+    result[1] = matrix[0][1] % m
+
+    return result
+}
+
+function calculateKA(k, matrix) {
+    var result = [[0,0],[0,0]]
+    result[0][0] = matrix[0][0] * k
+    result[1][0] = matrix[1][0] * k
+    result[0][1] = matrix[0][1] * k
+    result[1][1] = matrix[1][1] * k
+
+    return result
+}
+
+function kAModuloM(k, A, m) {
+
+}
+
+function calculateDeterminant(matrix) {
+    var detA = matrix[0][0]*matrix[1][1] - matrix[1][0]*matrix[0][1]
+
+    while (detA < 0) {
+        detA += 26
+    }
+
+    return detA
+}
+
+function hillEncipherWithKeyMatrix() {
+
+}
+
+/////////////////////////
+
+function permeateAllShifts() {
+    var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var plainText = ""
+    var alphabetIndex = 0
+    var textIndex = 0
+    var shift = 0
+    for(shift = 0; shift < 26; shift++) {
+        var shiftedAlphabet = shiftArray(standardAlphabet, shift)
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        for(alphabetIndex = 0; alphabetIndex < standardAlphabet.length; alphabetIndex++) {
+            if(shiftedAlphabet[alphabetIndex] == cipherArray[textIndex]) {
+                plainText += standardAlphabet[alphabetIndex]
+            }
+        }
+    }
+        plainText += "\n\n"
+    }
+
+    console.log(plainText)
+    document.getElementById("permutationsHolder").innerHTML = plainText
+}
+
 window.onclick = function(event) {
     if (!event.target.matches('.dropbtn')) {
         var dropdowns = document.getElementsByClassName("cipher-dropdown-content");
