@@ -732,10 +732,53 @@ function affineDecipher1() {
     var b = parseInt(document.getElementById("bTextField").value)
     console.log("b: " + b)
     var cipherText = document.getElementById("cipherTextField").value
-
+    
     var plainText = affineCipherDecrypt(a, b, cipherText)
+    
     console.log(plainText)
     document.getElementById("plainTextField").innerHTML = plainText
+}
+
+function affineDecipherUnknownAB(cipherText, limit) {
+    var aIndex = 0
+    var bIndex = 0
+    var plainText = " - "
+    var allText = ""
+
+    for(aIndex = 0; aIndex < limit; aIndex++) {
+        for(bIndex = 0; bIndex < limit; bIndex++) {
+            var possibleText = affineCipherDecrypt(aIndex, bIndex, cipherText)
+            allText = allText + "<br><br>" + "A:" + aIndex.toString + "B:" + bIndex.toString + " " + possibleText
+            if(wordsResembleEnglish(possibleText)) {
+                plainText = possibleText
+            }
+        }
+    }
+    document.getElementById("plainTextField").innerHTML = plainText
+    document.getElementById("permutationsHolder").innerHTML = allText
+}
+
+function wordsResembleEnglish(text) {
+    var variance = .01
+    var numberOfLettersInCipherText = getMessageLength(text)
+    var counts = getCountOfLettersInText(text)
+
+    var frequencys = calculateFrequencys(counts, numberOfLettersInCipherText)
+
+    var matchPercent = 0
+    var index = 0
+    for(index = 0; index < standardFrequencys.length; index++) {
+        var thisFrequency = Math.abs(frequencys[index])
+        var thisDiff = Math.abs(standardFrequencys[index] - thisFrequency)
+        if(thisDiff <= variance) {
+            matchPercent++
+        }
+    }
+
+    if(matchPercent >= 12) {
+        return true
+    }
+    return false
 }
 
 function affineCipherDecrypt(a, b, cipheredText) {
