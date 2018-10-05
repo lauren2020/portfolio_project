@@ -102,26 +102,34 @@
             <!-- <input id="cipherTextField" class="cipher-field" type="text" name="firstname" width="100" height="100"><br> -->
             <textarea id="cipherTextField" class="cipher-field" name="firstname"></textarea>
             <input type="submit" value="Decipher" onclick="decipher()">
-            <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
+
             <input type="submit" value="Affine Decipher" onclick="affineDecipher1()">
+
             <input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
+            <input type="submit" value="Permeate All Shifts" onclick="permeateAllShifts()">
+
             <input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
+            <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
             <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">
+
+            <input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
+            <input type="submit" value="Get matrix*k + modulus" onclick="calculateMatrixKAModulusFromFieldInput() ">
+            <input type="submit" value="Get Determinant" onclick="calculateDeterminateFromFieldInput()">
+            <input type="submit" value="Get Matrix A Inverse" onclick="findInverseFromGivenValues()">
+            <input type="submit" value="Hill Decipher (Matrix A)" onclick="hillDecipherWithMatrixA()">
+
             <input type="submit" value="Print Cosets" onclick="printCosetsOfLength()">
             <input type="submit" value="Print Frequencys of Cosets" onclick="frequencyCountCosetsOfLength()">
             <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
             <input type="submit" value="Get Alphabet Type" onclick="getAlphabetType()">
             <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
-            <input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
-            <input type="submit" value="Get matrix*k + modulus" onclick="calculateMatrixKAModulusFromFieldInput() ">
-            <input type="submit" value="Get Determinant" onclick="calculateDeterminateFromFieldInput()">
-            <input type="submit" value="Hill Encipher" onclick="hillCipherWithMatrixA()">
             <p></p>
             Plain Text:<br>
             <textarea id="plainTextField" class="cipher-field" name="firstname"></textarea>
             <input type="submit" value="Affine Cipher" onclick="affineCipher()">
-            <input type="submit" value="Shift Cipher" onclick="shiftCipher()">
+            <input type="submit" value="Shift Cipher (shift a)" onclick="shiftCipher()">
             <input type="submit" value="Vigenere Cipher" onclick="vigenereCipher()">
+            <input type="submit" value="Hill Encipher (Matrix A)" onclick="hillCipherWithMatrixA()">
             <p></p>
             <p id="permutationsTitle">Permutation Output:</p>
             <p id="permutationsHolder"> - </p>
