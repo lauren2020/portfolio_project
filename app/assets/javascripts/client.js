@@ -127,9 +127,10 @@ function getCharachterArrayOfText(text) {
 }
 
 function printCosetsOfLength() {
+    var a = parseInt(document.getElementById("aTextField").value)
     var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
     var cipherArray = getCharachterArrayOfText(cipherText)
-    var cosets = createCoset(4, cipherArray)
+    var cosets = createCoset(a, cipherArray)
     var indexOfCosets = 0
     for(indexOfCosets = 0; indexOfCosets < cosets.length; indexOfCosets++) {
         console.log(cosets[indexOfCosets])
@@ -170,11 +171,30 @@ function shiftDecipherOfAlength() {
     document.getElementById("plainTextField").innerHTML = plainText
 }
 
+function shiftEncipherOfAlength() {
+    var plainText = document.getElementById("plainTextField").value.toUpperCase()
+    var plainArray = getCharachterArrayOfText(plainText)
+    var cipherText = ""
+    var alphabetIndex = 0
+    var textIndex = 0
+    var shift = parseInt(document.getElementById("aTextField").value)
+    var shiftedAlphabet = shiftArray(standardAlphabet, shift)
+    for(textIndex = 0; textIndex < plainArray.length; textIndex++) {
+        for(alphabetIndex = 0; alphabetIndex < standardAlphabet.length; alphabetIndex++) {
+            if(standardAlphabet[alphabetIndex] == plainArray[textIndex]) {
+                cipherText += shiftedAlphabet[alphabetIndex]
+            }
+        }
+    }
+    console.log(cipherText)
+    document.getElementById("cipherTextField").innerHTML = cipherText
+}
+
 function vigenereDecipherWithDotProductKnownLength(keyLength, cipherArray) {
     // var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
     // var cipherArray = getCharachterArrayOfText(cipherText)
     var keywordLength = keyLength
-    console.log(keywordLength)
+    console.log("Keylength: " + keywordLength)
     var cosets = createCoset(keywordLength, cipherArray)
     var keywordValues = []
     var keyword = ""
@@ -182,7 +202,7 @@ function vigenereDecipherWithDotProductKnownLength(keyLength, cipherArray) {
     var indexInDotProduct = 0
     var indexInKeyword = 0
 
-    console.log("Cosets: " + cosets + " Length " + cosets.length)
+    //console.log("Cosets: " + cosets + " Length " + cosets.length)
 
     for(indexInCosets = 0; indexInCosets < cosets.length; indexInCosets++) {
         var cosetLetterCount = getCountOfLettersInText(cosets[indexInCosets])
@@ -194,17 +214,17 @@ function vigenereDecipherWithDotProductKnownLength(keyLength, cipherArray) {
         ///
         var dotProduct = []
         var dotProductIndex = 0
-        console.log("A = " + a)
+        //console.log("A = " + a)
         for(dotProductIndex = 0; dotProductIndex < a.length; dotProductIndex++) {
             var ai = shiftArray(a, dotProductIndex)
-            console.log("Ai = " + ai)
+            //console.log("Ai = " + ai)
             var aiDotb = aDotb(ai, b)
             dotProduct.push(aiDotb)
         }
         ///
-        console.log("Products:")
+        //console.log("Products:")
         for(indexInDotProduct = 1; indexInDotProduct < dotProduct.length; indexInDotProduct++) {
-            console.log(dotProduct[indexInDotProduct])
+            //console.log(dotProduct[indexInDotProduct])
             if(dotProduct[indexInDotProduct] > dotProduct[highIndex]) {
                 highIndex = indexInDotProduct
             }
@@ -597,7 +617,7 @@ function orderFrequencys(frequencys) {
         }
         //Create message for display
         for(j = 0; j < alphabet.length; j++) {
-            displayMessage += alphabet[j] + ": " + frequencys[j].toString() + " | " + standardAlphabetSorted[j] + "\n"
+            displayMessage += alphabet[j] + ": " + frequencys[j].toString() + " | " + standardAlphabetSorted[j] + "<br>"
         }
     
         return displayMessage
@@ -723,6 +743,39 @@ function calculateIndexOfCoincidence() {
 }
 
 function affineCipher() {
+    var a = parseInt(document.getElementById("aTextField").value)
+    console.log("a: " + a)
+    var b = parseInt(document.getElementById("bTextField").value)
+    console.log("b: " + b)
+    var plainText = document.getElementById("plainTextField").value
+
+    var cipherText = affineCipherEncrypt(a, b, plainText)
+    console.log(cipherText)
+    document.getElementById("cipherTextField").innerHTML = cipherText
+}
+
+function affineCipherEncrypt(a, b, plainText) {
+    var encryption = ""
+    var plainArray = getCharachterArrayOfText(plainText)
+    var textIndex = 0
+    for(textIndex = 0; textIndex < plainArray.length; textIndex++) {
+        var charachter = plainArray[textIndex]
+        var x = convertLetterToValue(charachter)
+        if (x != -1) {
+            var num = (a * x) + b
+            var y = 0
+            if (num < 0) {
+                while (num < 0) {
+                    num += 26
+                }
+                y = num
+            } else {
+                y = num % 26
+            }
+            encryption += convertValueToLetter(y)
+        }
+    }
+    return encryption
 }
 
 function affineDecipher1() {
@@ -753,14 +806,22 @@ function affineCipherDecrypt(a, b, cipheredText) {
             a_inv = inverseIndex; 
         } 
     } 
+    //console.log("Ainv: " + a_inv)
     for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
         var charachter = cipherArray[textIndex]
         var y = convertLetterToValue(charachter)
         if (y != -1) {
             var num = a_inv * (y - b)
-            var x = num % 26
-            if (x < 0) {
-                x = -x
+            //console.log("num: " + num)
+            var x = 0
+            //console.log("nuuMod26: " + x)
+            if (num < 0) {
+                while (num < 0) {
+                    num += 26
+                }
+                x = num
+            } else {
+                x = num % 26
             }
             decryption += convertValueToLetter(x)
         }
@@ -768,7 +829,326 @@ function affineCipherDecrypt(a, b, cipheredText) {
     return decryption
 }
 
-function columnarTransposition() {
+
+function affineDecipherUnknownAB() {
+    var cipherText = document.getElementById("cipherTextField").value
+
+    var limit = 20
+    var aIndex = 0
+    var bIndex = 0
+    var plainText = "No Apparent English Match (See All Output Below)"
+    var allText = ""
+    var aGuess = 0
+    var bGuess = 0
+    var matchPercent = 0
+
+    for(aIndex = 0; aIndex < limit; aIndex++) {
+        for(bIndex = 0; bIndex < limit; bIndex++) {
+            var possibleText = affineCipherDecrypt(aIndex, bIndex, cipherText)
+            allText = allText + "<br><br>" + "A:" + aIndex + " B:" + bIndex + " " + possibleText
+            var thisMatchPercent = wordsResembleEnglish(possibleText)
+            if(thisMatchPercent > matchPercent) {
+                matchPercent = thisMatchPercent
+                plainText = possibleText
+                aGuess = aIndex
+                bGuess = bIndex
+            }
+        }
+    }
+    document.getElementById("aTextField").innerHTML = aGuess
+    document.getElementById("bTextField").innerHTML = bGuess
+    document.getElementById("plainTextField").innerHTML = plainText
+    document.getElementById("permutationsHolder").innerHTML = allText
+}
+
+function wordsResembleEnglish(text) {
+    var variance = .01
+    var numberOfLettersInCipherText = getMessageLength(text)
+    var counts = getCountOfLettersInText(text)
+
+    var frequencys = calculateFrequencys(counts, numberOfLettersInCipherText)
+
+    var matchPercent = 0
+    var index = 0
+    for(index = 0; index < standardFrequencys.length; index++) {
+        var thisFrequency = Math.abs(frequencys[index])
+        var thisDiff = Math.abs(standardFrequencys[index] - thisFrequency)
+        if(thisDiff <= variance) {
+            matchPercent++
+        }
+    }
+
+    if(matchPercent >= 10) {
+        console.log("Match: " + matchPercent)
+        return matchPercent
+    }
+    return -1
+}
+////////////// COLUMNAR TRANSPOSITION ///////////////
+
+function columnarTranspositionWithKnownKeyword() {
+    var cipherText = document.getElementById("cipherTextField").value
+    var keyword = document.getElementById("keywordTextField").value
+    var plainText = columnarTranspositionDecrypt(cipherText, keyword)
+    document.getElementById("plainTextField").innerHTML = plainText
+}
+
+function columnarTranspositionWithKeyLengthA() {
+    var cipherText = document.getElementById("cipherTextField").value
+    var a = document.getElementById("aTextField").value
+    var plainText = columnarTranspositionWithKeyLength(cipherText, a)
+    document.getElementById("plainTextField").innerHTML = plainText
+}
+
+function columnarTranspositionWithUnkownLength(cipherText, keyword) {
+    var decryption = ""
+    var currentDecryptionEnglishMatch = 0
+
+    var limit = 26
+    var index = 0
+    for(index = 0; index < limit; index++) {
+        var possibleDecryption = columnarTranspositionWithKeyLength(cipherText, index)
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch > currentDecryptionEnglishMatch) {
+
+        }
+    }
+
+    return decryption
+}
+
+function columnarTranspositionWithKeyLength(cipherText, keywordLength) {
+    var decryption = ""
+    var englishMatch = 0
+    var index = 0
+    var wordList = getAllWordsOfLength(keywordLength)
+    for(index = 0; index < wordList.length; index++) {
+        var possibleDecryption = columnarTranspositionDecrypt(cipherText, wordList[index])
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch > englishMatch) {
+            console.log(possibleDecryption)
+            decryption = possibleDecryption
+            englishMatch = thisEnglishMatch
+            document.getElementById("keywordGuessHolder").innerHTML = wordList[index]
+        }
+    }
+    console.log("Final: " + decryption)
+    return decryption
+}
+
+function getAllWordsOfLength2(length){
+    var alphabet = standardAlphabet
+    var NUMBER_OF_PERMUTATIONS = Math.pow(alphabet.length, length)
+
+    var words = []
+
+    var temp = initializeArrayOfLengthWithX(length, 0)
+
+    var k = 0
+    var i = 0
+    for (i = 0; i < NUMBER_OF_PERMUTATIONS; i++) {
+        var n = i;
+        for (k = 0; k < length; k++) {
+            temp[k] = alphabet[aMODb(n, alphabet.length)];
+            n /= alphabet.length;
+        }
+        //console.log(temp)
+        words.push(arrayToString(temp));
+    }
+    console.log(words)
+    return words;
+} 
+
+function getAllWordsOfLength(length){
+    console.log("Getting words...")
+    var alphabet = standardAlphabet
+    //var NUMBER_OF_PERMUTATIONS = Math.pow(alphabet.length, length)
+
+    var words = []
+
+    var temp = ["G","E","","","","",""]
+
+    var i0 = 0
+    var i1 = 0
+    var i2 = 0
+    var i3 = 0
+    var i4 = 0
+    var i5 = 0
+    var i6 = 0
+
+    //for(i0 = 0; i0 < alphabet.length; i0++) {
+        //console.log("i: " + i0)
+        //for(i1 = 0; i1 < alphabet.length; i1++) {
+            for(i2 = 0; i2 < alphabet.length; i2++) {
+                for(i3 = 0; i3 < alphabet.length; i3++) {
+                    for(i4 = 0; i4 < alphabet.length; i4++) {
+                        for(i5 = 0; i5 < alphabet.length; i5++) {
+                            for(i6 = 0; i6 < alphabet.length; i6++) {
+                                //temp[0] = alphabet[i0]
+                                //temp[1] = alphabet[i1]
+                                temp[2] = alphabet[i2]
+                                temp[3] = alphabet[i3]
+                                temp[4] = alphabet[i4]
+                                temp[5] = alphabet[i5]
+                                temp[6] = alphabet[i6]
+                                words.push(arrayToString(temp));
+                            }
+                        }
+                    }
+                }
+            }
+        //}
+        //console.log(i0)
+    //}
+
+    // for (i = 0; i < NUMBER_OF_PERMUTATIONS; i++) {
+    //     var n = i;
+    //     for (k = 0; k < length; k++) {
+    //         temp[k] = alphabet[aMODb(n, alphabet.length)];
+    //         n /= alphabet.length;
+    //     }
+    //     //console.log(temp)
+    //     words.push(arrayToString(temp));
+    // }
+    //console.log(words)
+    return words;
+} 
+
+function aMODb(a, b) {
+    var mod = 0
+    if (a < 0) {
+        mod = a
+        while(mod < 0) {
+            mod += b
+        }
+    } else {
+        mod = a%b
+    }
+    return mod
+}
+
+function initializeArrayOfLengthWithX(length, x) {
+    var array = []
+    var index = 0
+    for(index = 0; index < length; index++) {
+        array.push(x)
+    }
+    return array
+}
+
+function arrayToString(array) {
+    var text = ""
+    var index = 0
+    for(index = 0; index < array.length; index++) {
+        text += array[index]
+    }
+    return text
+}
+
+function testColumnAlphabet() {
+    var keyword = document.getElementById("keywordTextField").value
+    var colal = getColumnarAlphabet(removeRepeatedLetters(keyword))
+    console.log(colal)
+}
+
+function removeRepeatedLetters(text) {
+    var cleanText = ""
+    var textArray = getCharachterArrayOfText(text)
+    var textIndex = 0
+    for(textIndex = 0; textIndex < textArray.length; textIndex++) {
+        var innerIndex = 0
+        var letterFound = false
+        for(innerIndex = 0; innerIndex < textIndex; innerIndex++) {
+            if(textArray[textIndex] == textArray[innerIndex]) {
+                letterFound = true
+                break
+            }
+        }
+        if(!letterFound) {
+            cleanText += textArray[textIndex]    
+        }
+    }
+    return cleanText
+}
+
+function getColumnarAlphabet(keywordIn) {
+    var keyword = keywordIn.toUpperCase()
+    var alphabetIndex = 0
+    var keywordIndex = 0
+    var currentMatrix = []
+    var matrices = []
+    var cipherAlphabet = []
+    var counter = keyword.length
+    for(keywordIndex = 0; keywordIndex < keyword.length; keywordIndex++) {
+        currentMatrix.push(keyword[keywordIndex])
+    }
+    matrices = [currentMatrix]
+    currentMatrix = []
+    for(alphabetIndex = 0; alphabetIndex < standardAlphabet.length; alphabetIndex++) {
+        if(counter == 0) {
+            //currentMatrix.push(standardAlphabet[alphabetIndex])
+            matrices.push(currentMatrix)
+            currentMatrix = []
+            counter = keyword.length - 1
+            currentMatrix.push(standardAlphabet[alphabetIndex])
+        } else {
+            var passes = false
+            while(!passes) {
+                var passCount = 0
+                for(keywordIndex = 0; keywordIndex < keyword.length; keywordIndex++) {
+                    if(standardAlphabet[alphabetIndex] == keyword[keywordIndex]) {
+                        alphabetIndex++
+                        break
+                    } else {
+                        passCount++
+                    }
+                }
+                if(passCount == keyword.length) {
+                    passes = true
+                }
+            }
+            currentMatrix.push(standardAlphabet[alphabetIndex])
+            counter--
+        }
+    }
+    matrices.push(currentMatrix)
+    //console.log(matrices)
+
+    //load cipher alphabet
+    //[[G,E,O,D,S,I,C], [A,B,F,H,J,K,L], [M,N,P,Q,R,T,U], [V,W,X,Y,Z]]
+    var matrixIndex = 0
+    //var counter = 0
+    for(keywordIndex = 0; keywordIndex < keyword.length; keywordIndex++) {
+        for(matrixIndex = 0; matrixIndex < matrices.length; matrixIndex++) {
+            if(matrices[matrixIndex][keywordIndex] != undefined) {
+                cipherAlphabet.push(matrices[matrixIndex][keywordIndex])
+                //counter++
+            }
+        }
+    }
+
+    return cipherAlphabet
+}
+
+function columnarTranspositionDecrypt(cipherText, keyword) {
+    var decryption = ""
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var cipherAlphabet = getColumnarAlphabet(removeRepeatedLetters(keyword))
+    var textIndex = 0
+    var alphabetIndex = 0
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        for(alphabetIndex = 0; alphabetIndex < cipherAlphabet.length; alphabetIndex++) {
+            if(cipherArray[textIndex] == cipherAlphabet[alphabetIndex]) {
+                decryption += standardAlphabet[alphabetIndex]
+            }
+        }
+    }
+    return decryption
+}
+
+//////////////////////////////////////////////////////
+
+function scytaleCipher() {
 
 }
 
@@ -1098,24 +1478,33 @@ function hillEncipherWithKeyMatrix() {
 function permeateAllShifts() {
     var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
     var cipherArray = getCharachterArrayOfText(cipherText)
-    var plainText = ""
+    var plainText = "No Apparent English Match"
+    var allText = ""
     var alphabetIndex = 0
     var textIndex = 0
     var shift = 0
+    var currentMaxPercentMatch = 0
     for(shift = 0; shift < 26; shift++) {
+        var possibleText = ""
         var shiftedAlphabet = shiftArray(standardAlphabet, shift)
     for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
         for(alphabetIndex = 0; alphabetIndex < standardAlphabet.length; alphabetIndex++) {
             if(shiftedAlphabet[alphabetIndex] == cipherArray[textIndex]) {
-                plainText += standardAlphabet[alphabetIndex]
+                possibleText += standardAlphabet[alphabetIndex]
             }
         }
     }
-        plainText += "\n\n"
+        var matchPercent = wordsResembleEnglish(plainText)
+        if(matchPercent > currentMaxPercentMatch) {
+            currentMaxPercentMatch = matchPercent
+            plainText = possibleText
+        }
+        allText = allText + "<br><br>" + shift + ": " + possibleText
     }
 
     console.log(plainText)
-    document.getElementById("permutationsHolder").innerHTML = plainText
+    document.getElementById("plainTextField").innerHTML = plainText
+    document.getElementById("permutationsHolder").innerHTML = allText
 }
 
 window.onclick = function(event) {
