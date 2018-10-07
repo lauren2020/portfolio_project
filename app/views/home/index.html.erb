@@ -103,7 +103,11 @@
             <textarea id="cipherTextField" class="cipher-field" name="firstname"></textarea>
             <input type="submit" value="Decipher" onclick="decipher()">
 
-            <input type="submit" value="Affine Decipher" onclick="affineDecipher1()">
+            <input type="submit" value="Columnar Transposition (keyword)" onclick="columnarTranspositionWithKnownKeyword()">
+            <input type="submit" value="Columnar Transposition (key length a)" onclick="columnarTranspositionWithKeyLengthA()">
+
+            <input type="submit" value="Affine Decipher" onclick="affineDecipherUnknownAB()">
+            <input type="submit" value="Affine Decipher (a and b)" onclick="affineDecipher1()">
 
             <input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
             <input type="submit" value="Permeate All Shifts" onclick="permeateAllShifts()">
@@ -126,10 +130,11 @@
             <p></p>
             Plain Text:<br>
             <textarea id="plainTextField" class="cipher-field" name="firstname"></textarea>
-            <input type="submit" value="Affine Cipher" onclick="affineCipher()">
-            <input type="submit" value="Shift Cipher (shift a)" onclick="shiftCipher()">
+            <input type="submit" value="Affine Cipher (a & b)" onclick="affineCipher()">
+            <input type="submit" value="Shift Cipher (shift a)" onclick="shiftEncipherOfAlength()">
             <input type="submit" value="Vigenere Cipher" onclick="vigenereCipher()">
             <input type="submit" value="Hill Encipher (Matrix A)" onclick="hillCipherWithMatrixA()">
+            <input type="submit" value="Test Columns" onclick="testColumnAlphabet()">
             <p></p>
             <p id="permutationsTitle">Permutation Output:</p>
             <p id="permutationsHolder"> - </p>
