@@ -132,9 +132,17 @@ function printCosetsOfLength() {
     var cipherArray = getCharachterArrayOfText(cipherText)
     var cosets = createCoset(a, cipherArray)
     var indexOfCosets = 0
+    var displayText = ""
     for(indexOfCosets = 0; indexOfCosets < cosets.length; indexOfCosets++) {
         console.log(cosets[indexOfCosets])
+        var indexOfCoset = 0
+        displayText = displayText + indexOfCosets + " : "
+        for(indexOfCoset = 0; indexOfCoset < cosets[indexOfCosets].length; indexOfCoset++) {
+            displayText = displayText + cosets[indexOfCosets][indexOfCoset] + " | "
+        }
+        displayText += "<br><br>"
     }
+    document.getElementById("cosetsHolder").innerHTML = displayText
 }
 
 function frequencyCountCosetsOfLength() {
@@ -150,6 +158,48 @@ function frequencyCountCosetsOfLength() {
         var displayMessage = orderFrequencys(frequencys)
         console.log(displayMessage)
     }
+}
+
+function kasiskiTest() {
+    var length = document.getElementById("aTextField").value
+    var text = document.getElementById("cipherTextField").value
+    findDuplicatesSetsOfLength(text, length)
+}
+
+function findDuplicatesSetsOfLength(text, l) {
+    var textArray = getCharachterArrayOfText(text)
+    var cleanText = arrayToString(textArray)
+    var textIndex = 0
+    var sets = []
+    var countOfSets = []
+    var positionOfSets = []
+    for(textIndex = 0; textIndex < cleanText.length - l; textIndex++) {
+        var positionInSets = subsetPositionInSets(cleanText.substr(textIndex, l), sets)
+        if(positionInSets == -1) {
+            sets.push(cleanText.substr(textIndex, l))
+            countOfSets.push(1)
+            positionOfSets.push([textIndex])
+        } else {
+            countOfSets[positionInSets] += 1
+            positionOfSets[positionInSets].push(textIndex)
+        }
+    }
+
+    for(textIndex = 0; textIndex < sets.length; textIndex++) {
+        if (countOfSets[textIndex] != 1) {
+        console.log("Set: " + sets[textIndex] + " | Positions: " + countOfSets[textIndex] + "<br>")
+        }
+    }
+}
+
+function subsetPositionInSets(subset, sets) {
+    var setsIndex = 0
+    for(setsIndex = 0; setsIndex < sets.length; setsIndex++) {
+        if(subset == sets[setsIndex]) {
+            return setsIndex
+        }
+    }
+    return -1
 }
 
 function shiftDecipherOfAlength() {
@@ -879,12 +929,15 @@ function wordsResembleEnglish(text) {
     }
 
     if(matchPercent >= 10) {
-        console.log("Match: " + matchPercent)
+        //console.log("Match: " + matchPercent)
         return matchPercent
     }
     return -1
 }
 ////////////// COLUMNAR TRANSPOSITION ///////////////
+
+var wordsTraversed = 0
+var wordsInCT = 0
 
 function columnarTranspositionWithKnownKeyword() {
     var cipherText = document.getElementById("cipherTextField").value
@@ -895,7 +948,7 @@ function columnarTranspositionWithKnownKeyword() {
 
 function columnarTranspositionWithKeyLengthA() {
     var cipherText = document.getElementById("cipherTextField").value
-    var a = document.getElementById("aTextField").value
+    var a = parseInt(document.getElementById("aTextField").value)
     var plainText = columnarTranspositionWithKeyLength(cipherText, a)
     document.getElementById("plainTextField").innerHTML = plainText
 }
@@ -917,23 +970,79 @@ function columnarTranspositionWithUnkownLength(cipherText, keyword) {
     return decryption
 }
 
+function move() {
+    console.log("Moving...")
+    var elem = document.getElementById("myBar"); 
+    var width = 1;
+    var id = setInterval(frame, 10);
+    function frame() {
+        if (width >= 100) {
+            clearInterval(id);
+        } else {
+            console.log("+")
+            width = (wordsTraversed / wordsInCT) * 100
+            elem.style.width = width + '%'; 
+        }
+    }
+}
+
 function columnarTranspositionWithKeyLength(cipherText, keywordLength) {
     var decryption = ""
     var englishMatch = 0
     var index = 0
-    var wordList = getAllWordsOfLength(keywordLength)
+    var wordList = getAllWordsOfLengthRec(keywordLength)
+    wordsInCT = wordList.length
+    if (wordsInCT != 0) {
+        //move()
+    }
+    
     for(index = 0; index < wordList.length; index++) {
+        //wordsTraversed = index
+        if(index%1000 == 0) {
+            console.log(((index / wordsInCT) * 100) + "%")
+        }
         var possibleDecryption = columnarTranspositionDecrypt(cipherText, wordList[index])
         var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
         if(thisEnglishMatch > englishMatch) {
             console.log(possibleDecryption)
             decryption = possibleDecryption
             englishMatch = thisEnglishMatch
+            //var currentText = document.getElementById("permutationsHolder").value
             document.getElementById("keywordGuessHolder").innerHTML = wordList[index]
+            document.getElementById("permutationsHolder").innerHTML += wordList[index] + " : " + possibleDecryption + "<br><br>"
         }
     }
     console.log("Final: " + decryption)
     return decryption
+}
+
+function testWordGenerator() {
+    var length = parseInt(document.getElementById("aTextField").value)
+    console.log(getAllWordsOfLengthRec(length))
+}
+
+function getAllWordsOfLengthRec(l) {
+    let getAllWords = wordLength => {
+        if (typeof wordLength != 'number') throw Error('wordLength must be a number.')
+        if (wordLength < 0) throw Error('wordLength must be greater than or equal to zero.')
+    
+        let alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+        let words = []
+        if (wordLength != 0) words = alphabet
+    
+        for (let i = 1; i < wordLength; i++) {
+            let temp = []
+            words.forEach(word => {
+                alphabet.forEach(letter => temp.push(word + letter))
+            })
+            words = temp
+        }
+    
+        return words
+    }
+    
+    //console.log(getAllWords(l))
+    return getAllWords(l)
 }
 
 function getAllWordsOfLength2(length){
@@ -1186,6 +1295,30 @@ function myFunction() {
     document.getElementById("cipherTypeDropdown").classList.toggle("show");
 }
 
+function openHillCipherMenu() {
+    document.getElementById("hillCipherDropdown").classList.toggle("show");
+}
+
+function openExtraToolsMenu() {
+    document.getElementById("extraToolsDropdown").classList.toggle("show");
+}
+
+function openShiftCipherMenu() {
+    document.getElementById("shiftCipherDropdown").classList.toggle("show");
+}
+
+function openAffineCipherMenu() {
+    document.getElementById("affineCipherDropdown").classList.toggle("show");
+}
+
+function openVigenereCipherMenu() {
+    document.getElementById("vigenereCipherDropdown").classList.toggle("show");
+}
+
+function openColumnarTranspositionCipherMenu() {
+    document.getElementById("columnarTranspositionCipherDropdown").classList.toggle("show");
+}
+
 function generateAllNLetterCombinations(n) {
     var words = []
     var index = 0
@@ -1341,6 +1474,85 @@ function hillDecipherWithMatrixA() {
     console.log(plainText)
     document.getElementById("plainTextField").innerHTML = plainText
 }
+
+function hillDecipherWithUnkownMatrix() {
+    var matrixA = [[0,0],[0,0]]
+    var limit = parseInt(document.getElementById("aTextField").value)
+    var englishMatch = 0
+    var plainText = ""
+    // matrixA[0][1] = parseInt(document.getElementById("matrixa01TextField").value)
+    // matrixA[1][0] = parseInt(document.getElementById("matrixa10TextField").value)
+    // matrixA[1][1] = parseInt(document.getElementById("matrixa11TextField").value)
+
+    var limitIndexA = 0
+    var limitIndexB = 0
+    var limitIndexC = 0
+    var limitIndexD = 0
+
+    for(limitIndexA = 0; limitIndexA < limit; limitIndexA++) {
+        for(limitIndexB = 0; limitIndexB < limit; limitIndexB++) {
+            for(limitIndexC = 0; limitIndexC < limit; limitIndexC++) {
+                for(limitIndexD = 0; limitIndexD < limit; limitIndexD++) {
+                    matrixA[0][0] = limitIndexA
+                    matrixA[0][1] = limitIndexB
+                    matrixA[1][0] = limitIndexC
+                    matrixA[1][1] = limitIndexD
+
+    var matrixInv = getInverseOf(matrixA, 26)
+    var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var textIndex = 0
+    var matrixIndex = 0
+    var matrices = []
+    var currentMatrix = [-1,-1]
+
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        var value = convertLetterToValue(cipherArray[textIndex])
+        if(matrixIndex < 2 && textIndex != cipherArray.length - 1) {
+            currentMatrix[matrixIndex] = value
+            matrixIndex++
+        } else {
+            if(textIndex == cipherArray.length - 1) {
+                currentMatrix[matrixIndex] = value
+
+            }
+            currentMatrix = calculateMatrixProduct4x2(matrixInv, [currentMatrix])
+            currentMatrix = matrixModulusM2x2(currentMatrix, 26)
+            matrices.push(currentMatrix[0])
+            matrices.push(currentMatrix[1])
+            currentMatrix[-1,-1]
+            currentMatrix[0] = value
+            matrixIndex = 1
+        }
+    }
+    var possibleDecryption = ""
+    var matricesIndex = 0
+    for(matricesIndex = 0; matricesIndex < matrices.length; matricesIndex++) {
+        possibleDecryption += convertValueToLetter(matrices[matricesIndex])
+    }
+
+    //var possibleDecryption = columnarTranspositionDecrypt(cipherText, wordList[index])
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch >= 10) {
+            document.getElementById("permutationsHolder").innerHTML += limitIndexA + "," + limitIndexB + "," + limitIndexC + "," + limitIndexD + " : " + possibleDecryption + "<br><br>"
+        }
+        if(thisEnglishMatch > englishMatch) {
+            console.log(possibleDecryption)
+            plainText = possibleDecryption
+            englishMatch = thisEnglishMatch
+            //var currentText = document.getElementById("permutationsHolder").value
+            document.getElementById("keywordGuessHolder").innerHTML = limitIndexA + "," + limitIndexB + "," + limitIndexC + "," + limitIndexD
+            //document.getElementById("permutationsHolder").innerHTML += wordList[index] + " : " + possibleDecryption + "<br><br>"
+        }
+                }
+            }
+        }
+    }
+
+    console.log(plainText)
+    document.getElementById("plainTextField").innerHTML = plainText
+}
+
 
 function getAdjuntMatrix(matrix) {
     var adjunctMatrix = [[0,0],[0,0]]
@@ -1515,10 +1727,10 @@ window.onclick = function(event) {
             var openDropdown = dropdowns[i];
             if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
-                console.log("inIf: " + openDropdown.value + " " + i)
+                //console.log("inIf: " + openDropdown.value + " " + i)
             }
             //electedCipher = openDropdown.id
-            console.log("OPen: " + openDropdown.id + " " + i)
+            //console.log("OPen: " + openDropdown.id + " " + i)
         }
     }
 }

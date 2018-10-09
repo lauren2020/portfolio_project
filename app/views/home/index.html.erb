@@ -103,30 +103,83 @@
             <textarea id="cipherTextField" class="cipher-field" name="firstname"></textarea>
             <input type="submit" value="Decipher" onclick="decipher()">
 
-            <input type="submit" value="Columnar Transposition (keyword)" onclick="columnarTranspositionWithKnownKeyword()">
-            <input type="submit" value="Columnar Transposition (key length a)" onclick="columnarTranspositionWithKeyLengthA()">
+            <div class="dropdown">
+                <button onclick="openColumnarTranspositionCipherMenu()" class="dropbtn">Col. Transposition Cipher Tools</button>
+                <div id="columnarTranspositionCipherDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Columnar Transposition (keyword)" onclick="columnarTranspositionWithKnownKeyword()">
+                    <input type="submit" value="Columnar Transposition (key length a)" onclick="columnarTranspositionWithKeyLengthA()">
+                </div>
+            </div>
+            <!--<input type="submit" value="Columnar Transposition (keyword)" onclick="columnarTranspositionWithKnownKeyword()">
+            <input type="submit" value="Columnar Transposition (key length a)" onclick="columnarTranspositionWithKeyLengthA()">-->
 
-            <input type="submit" value="Affine Decipher" onclick="affineDecipherUnknownAB()">
-            <input type="submit" value="Affine Decipher (a and b)" onclick="affineDecipher1()">
+            <div class="dropdown">
+                <button onclick="openAffineCipherMenu()" class="dropbtn">Affine Cipher Tools</button>
+                <div id="affineCipherDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Affine Decipher" onclick="affineDecipherUnknownAB()">
+                    <input type="submit" value="Affine Decipher (a and b)" onclick="affineDecipher1()">
+                </div>
+            </div>
+            <!--<input type="submit" value="Affine Decipher" onclick="affineDecipherUnknownAB()">
+            <input type="submit" value="Affine Decipher (a and b)" onclick="affineDecipher1()">-->
 
-            <input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
-            <input type="submit" value="Permeate All Shifts" onclick="permeateAllShifts()">
+            <div class="dropdown">
+                <button onclick="openShiftCipherMenu()" class="dropbtn">Shift Cipher Tools</button>
+                <div id="shiftCipherDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
+                    <input type="submit" value="Permeate All Shifts" onclick="permeateAllShifts()">
+                </div>
+            </div>
+            <!--<input type="submit" value="Shift Decipher (Shift a)" onclick="shiftDecipherOfAlength()">
+            <input type="submit" value="Permeate All Shifts" onclick="permeateAllShifts()">-->
 
-            <input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
+            <div class="dropdown">
+                <button onclick="openVigenereCipherMenu()" class="dropbtn">Vigenere Cipher Tools</button>
+                <div id="vigenereCipherDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
+                    <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
+                    <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">
+                </div>
+            </div>
+            <!--<input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
             <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
-            <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">
+            <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">-->
 
-            <input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
+            <div class="dropdown">
+                <button onclick="openHillCipherMenu()" class="dropbtn">Hill Cipher Tools</button>
+                <div id="hillCipherDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
+                    <input type="submit" value="Get matrix*k + modulus" onclick="calculateMatrixKAModulusFromFieldInput() ">
+                    <input type="submit" value="Get Determinant" onclick="calculateDeterminateFromFieldInput()">
+                    <input type="submit" value="Get Matrix A Inverse" onclick="findInverseFromGivenValues()">
+                    <input type="submit" value="Hill Decipher (Matrix A)" onclick="hillDecipherWithMatrixA()">
+                    <input type="submit" value="Hill Decipher (Unkown)" onclick="hillDecipherWithUnkownMatrix()">
+                </div>
+            </div>
+            <!--<input type="submit" value="Get matrix product + modulus" onclick="calculateMatrixProductFromFieldInput()">
             <input type="submit" value="Get matrix*k + modulus" onclick="calculateMatrixKAModulusFromFieldInput() ">
             <input type="submit" value="Get Determinant" onclick="calculateDeterminateFromFieldInput()">
             <input type="submit" value="Get Matrix A Inverse" onclick="findInverseFromGivenValues()">
-            <input type="submit" value="Hill Decipher (Matrix A)" onclick="hillDecipherWithMatrixA()">
+            <input type="submit" value="Hill Decipher (Matrix A)" onclick="hillDecipherWithMatrixA()">-->
 
-            <input type="submit" value="Print Cosets" onclick="printCosetsOfLength()">
+            <div class="dropdown">
+                <button onclick="openExtraToolsMenu()" class="dropbtn">Extra Tools</button>
+                <div id="extraToolsDropdown" class="cipher-dropdown-content">
+                    <input type="submit" value="Print Cosets" onclick="printCosetsOfLength()">
+                    <input type="submit" value="Print Frequencys of Cosets" onclick="frequencyCountCosetsOfLength()">
+                    <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
+                    <input type="submit" value="Get Alphabet Type" onclick="getAlphabetType()">
+                    <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
+                    <input type="submit" value="Kasiski Sets" onclick="kasiskiTest()">
+                </div>
+            </div>
+            <input type="submit" value="Test Words" onclick="testWordGenerator()">
+            <!--<input type="submit" value="Print Cosets" onclick="printCosetsOfLength()">
             <input type="submit" value="Print Frequencys of Cosets" onclick="frequencyCountCosetsOfLength()">
             <input type="submit" value="Frequency Count" onclick="frequencyAnalysis()">
             <input type="submit" value="Get Alphabet Type" onclick="getAlphabetType()">
             <input type="submit" value="Get Keyword Length" onclick="analyzeKeywordLength()">
+            <input type="submit" value="Kasiski Sets" onclick="kasiskiTest()">-->
             <p></p>
             Plain Text:<br>
             <textarea id="plainTextField" class="cipher-field" name="firstname"></textarea>
@@ -141,6 +194,9 @@
         </div>
 
         <div id="sidePane" class="right-side-pane">
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
             <p id="frequencyTitle">Frequency Analyis:</p>
             <p id="frequencyHolder" class="holder" value="$frequencyHolderMessage"> - </p>
             <p id="frequencyAssociationTitle">Frequency Association:</p>
@@ -153,6 +209,8 @@
             <p id="keywordLengthHolder" class="holder"> - </p>
             <p id="keywordGuessTitle">Keyword Guess:</p>
             <p id="keywordGuessHolder" class="holder"> - </p>
+            <p id="keywordGuessTitle">Cosets:</p>
+            <p id="cosetsHolder" class="holder"> - </p>
         </div>
     </div>
 
