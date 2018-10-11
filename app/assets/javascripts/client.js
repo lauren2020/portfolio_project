@@ -52,12 +52,51 @@ var vigenereSquare = [aRow, bRow, cRow, dRow, eRow, fRow, gRow, hRow, iRow, jRow
 
 function decipher() {
     var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var limit = parseInt(document.getElementById("aTextField").value)
 
-    var numberOfLettersInCipherText = getMessageLength(cipherText)
-    var counts = getCountOfLettersInText(cipherText)
-    var frequencys = calculateFrequencys(counts, numberOfLettersInCipherText)
-    var orderedFrequencys = orderFrequencysArray(frequencys)
-    console.log(orderedFrequencys)
+    // var numberOfLettersInCipherText = getMessageLength(cipherText)
+    // var counts = getCountOfLettersInText(cipherText)
+    // var frequencys = calculateFrequencys(counts, numberOfLettersInCipherText)
+    // var orderedFrequencys = orderFrequencysArray(frequencys)
+    //console.log(orderedFrequencys)
+
+    var type = ["Vigenere","Affine","Shift"]
+    var results = [["",""],["",""],["",""]]
+    results[0] = vigenereDecipherWithUnkownLength(cipherText, limit)
+    console.log("Vigenere: " + results[0])
+    results[1] = affineDecipherUnknowns(cipherText, limit)
+    console.log("Affine: " + results[1])
+    results[3] = permeateAllShiftsResults(cipherText) //1844
+    console.log("Shift: " + results[2])
+   //results[4] = hill
+
+    var englishMatch = 0
+    var allText = ""
+    var decryption = ""
+    var keyword = ""
+    var index = 0
+    for(index = 0; index < results.length; index++) {
+        //var keywordLength = index
+        //var results = vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+        var possibleDecryption = results[index][0]
+
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch > englishMatch) {
+            console.log(possibleDecryption)
+            decryption = possibleDecryption
+            keyword = results[index][1]
+            englishMatch = thisEnglishMatch
+            //var currentText = document.getElementById("permutationsHolder").value
+            document.getElementById("keywordGuessHolder").innerHTML = keyword
+            // var output = type[index] + " : " + keyword + " : " + possibleDecryption + "<br><br>"
+            // allText += output
+        }
+        var output = type[index] + " : " + results[index][1] + " : " + possibleDecryption + "<br><br>"
+        allText += output
+    }
+
+    document.getElementById("permutationsHolder").innerHTML = allText
+    document.getElementById("plainTextField").innerHTML = decryption
 }
 
 function createSignature() {
@@ -286,11 +325,16 @@ function vigenereDecipherWithDotProductKnownLength(keyLength, cipherArray) {
         keyword += convertValueToLetter(keywordValues[indexInKeyword])
     }
 
+    //var results = [plainText, keyword]
+
     console.log("Final Keyword: " + keyword)
-    document.getElementById("keywordGuessHolder").innerHTML = keyword
+    //document.getElementById("keywordGuessHolder").innerHTML = keyword
     var plainText = vigenereDecipherWithKeyword(keyword, cipherArray)
     console.log("Plain Text: " + plainText)
-    document.getElementById("plainTextField").innerHTML = plainText
+    //document.getElementById("plainTextField").innerHTML = plainText
+
+    var results = [plainText, keyword]
+    return results
 }
 
 function vigenereDecipher() {
@@ -298,7 +342,9 @@ function vigenereDecipher() {
     var cipherArray = getCharachterArrayOfText(cipherText)
     var keywordLength = estimateVigenereKeywordLength(cipherText)
 
-    vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+    var results = vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+    document.getElementById("plainTextField").innerHTML = results[0]
+    document.getElementById("keywordGuessHolder").innerHTML = results[1]
 }
 
 function vigenereDecipherWithA() {
@@ -306,7 +352,64 @@ function vigenereDecipherWithA() {
     var cipherArray = getCharachterArrayOfText(cipherText)
     var keywordLength = parseInt(document.getElementById("aTextField").value)
     
-    vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+    var results = vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+    document.getElementById("plainTextField").innerHTML = results[0]
+    document.getElementById("keywordGuessHolder").innerHTML = results[1]
+}
+
+function vigenereDecipherWithUnkownLengthFromInput() {
+    var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var limit = parseInt(document.getElementById("aTextField").value)
+    
+    var englishMatch = 0
+    var decryption = ""
+    var keyword = ""
+    var index = 0
+    for(index = 1; index < limit; index++) {
+        var keywordLength = index
+        var results = vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+        var possibleDecryption = results[0]
+
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch > englishMatch) {
+            console.log(possibleDecryption)
+            decryption = possibleDecryption
+            keyword = results[1]
+            englishMatch = thisEnglishMatch
+            //var currentText = document.getElementById("permutationsHolder").value
+            document.getElementById("keywordGuessHolder").innerHTML = keyword
+            document.getElementById("permutationsHolder").innerHTML += keyword + " : " + possibleDecryption + "<br><br>"
+        }
+    }
+
+    document.getElementById("plainTextField").innerHTML = decryption
+}
+
+function vigenereDecipherWithUnkownLength(cipherText, limit) {
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var englishMatch = 0
+    var decryption = ""
+    var keyword = ""
+    var index = 0
+    for(index = 1; index < limit; index++) {
+        var keywordLength = index
+        var results = vigenereDecipherWithDotProductKnownLength(keywordLength, cipherArray)
+        var possibleDecryption = results[0]
+
+        var thisEnglishMatch = wordsResembleEnglish(possibleDecryption)
+        if(thisEnglishMatch > englishMatch) {
+            //console.log(possibleDecryption)
+            decryption = possibleDecryption
+            keyword = results[1]
+            englishMatch = thisEnglishMatch
+            //var currentText = document.getElementById("permutationsHolder").value
+            //document.getElementById("keywordGuessHolder").innerHTML = keyword
+            //document.getElementById("permutationsHolder").innerHTML += keyword + " : " + possibleDecryption + "<br><br>"
+        }
+    }
+
+    return [decryption, keyword]
 }
 
 // function vigenereDecipherWithDotProduct() {
@@ -911,6 +1014,35 @@ function affineDecipherUnknownAB() {
     document.getElementById("permutationsHolder").innerHTML = allText
 }
 
+function affineDecipherUnknowns(cipherText, limit) {
+    var aIndex = 0
+    var bIndex = 0
+    var plainText = ""
+    //"No Apparent English Match (See All Output Below)"
+    var allText = ""
+    var aGuess = 0
+    var bGuess = 0
+    var matchPercent = 0
+
+    for(aIndex = 0; aIndex < limit; aIndex++) {
+        for(bIndex = 0; bIndex < limit; bIndex++) {
+            var possibleText = affineCipherDecrypt(aIndex, bIndex, cipherText)
+            allText = allText + "<br><br>" + "A:" + aIndex + " B:" + bIndex + " " + possibleText
+            var thisMatchPercent = wordsResembleEnglish(possibleText)
+            if(thisMatchPercent > matchPercent) {
+                matchPercent = thisMatchPercent
+                plainText = possibleText
+                aGuess = aIndex
+                bGuess = bIndex
+            }
+        }
+    }
+
+    var keyword = "a: " + aGuess + ", b: " + bGuess
+    var results = [plainText, keyword]
+    return results
+}
+
 function wordsResembleEnglish(text) {
     var variance = .01
     var numberOfLettersInCipherText = getMessageLength(text)
@@ -1454,7 +1586,6 @@ function hillDecipherWithMatrixA() {
         } else {
             if(textIndex == cipherArray.length - 1) {
                 currentMatrix[matrixIndex] = value
-
             }
             currentMatrix = calculateMatrixProduct4x2(matrixInv, [currentMatrix])
             currentMatrix = matrixModulusM2x2(currentMatrix, 26)
@@ -1717,6 +1848,42 @@ function permeateAllShifts() {
     console.log(plainText)
     document.getElementById("plainTextField").innerHTML = plainText
     document.getElementById("permutationsHolder").innerHTML = allText
+}
+
+function permeateAllShiftsResults(cipherText) {
+    var cipherText = document.getElementById("cipherTextField").value.toUpperCase()
+    var cipherArray = getCharachterArrayOfText(cipherText)
+    var plainText = ""
+    var shiftGuess = 0
+    var allText = ""
+    var alphabetIndex = 0
+    var textIndex = 0
+    var shift = 0
+    var currentMaxPercentMatch = 0
+    for(shift = 0; shift < 26; shift++) {
+        var possibleText = ""
+        var shiftedAlphabet = shiftArray(standardAlphabet, shift)
+    for(textIndex = 0; textIndex < cipherArray.length; textIndex++) {
+        for(alphabetIndex = 0; alphabetIndex < standardAlphabet.length; alphabetIndex++) {
+            if(shiftedAlphabet[alphabetIndex] == cipherArray[textIndex]) {
+                possibleText += standardAlphabet[alphabetIndex]
+            }
+        }
+    }
+        var matchPercent = wordsResembleEnglish(plainText)
+        if(matchPercent > currentMaxPercentMatch) {
+            currentMaxPercentMatch = matchPercent
+            plainText = possibleText
+            shiftGuess = shift
+        }
+        allText = allText + "<br><br>" + shift + ": " + possibleText
+    }
+
+    console.log(plainText)
+    document.getElementById("plainTextField").innerHTML = plainText
+    //document.getElementById("permutationsHolder").innerHTML = allText
+    var results = [plainText, shiftGuess]
+    return results
 }
 
 window.onclick = function(event) {

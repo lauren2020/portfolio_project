@@ -136,7 +136,8 @@
             <div class="dropdown">
                 <button onclick="openVigenereCipherMenu()" class="dropbtn">Vigenere Cipher Tools</button>
                 <div id="vigenereCipherDropdown" class="cipher-dropdown-content">
-                    <input type="submit" value="Vigenere Decipher" onclick="vigenereDecipher()">
+                    <input type="submit" value="Vigenere Decipher (Unkown)" onclick="vigenereDecipherWithUnkownLengthFromInput()">
+                    <input type="submit" value="Vigenere Decipher (Guess Key)" onclick="vigenereDecipher()">
                     <input type="submit" value="Vigenere With Keyword Length a" onclick="vigenereDecipherWithA()">
                     <input type="submit" value="Vigenere Decipher With Known Key" onclick="vigenereDecipherWithKnownKeyword()">
                 </div>
